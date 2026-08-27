@@ -7,10 +7,12 @@
   <meta name="description" content="Jornada Literária | 11 e 12 de dezembro — Mercado de livros digitais e autopublicação, audiolivro e acessibilidade. #Participe">
   <link rel="icon" type="image/png" href="assets/logo-jl-mark.png">
 
-  <!-- Google Fonts: Poppins (títulos) + Space Mono (texto corrido, referência tipográfica do material original) -->
+  <!-- Google Fonts: Poppins (títulos, agora também o logotipo vetorizado),
+       Playfair Display itálico (acento "LITERÁRIA" do logotipo) e
+       Space Mono (texto corrido, referência tipográfica do material original) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Poppins:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="main.css">
 </head>
@@ -18,34 +20,44 @@
 
   <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
 
-  <!-- ============ HERO ============ -->
-  <header class="hero">
-    <img class="hero__decor" src="assets/hero-foto-duotone.png" alt="" aria-hidden="true" width="813" height="1350">
+  <!-- ============================================================
+       .stage agrupa Hero + Intro + Programação + #Participe: no
+       desktop (>=700px) essas 4 seções juntas ocupam exatamente
+       100vh (ajuste pedido: tudo isso visível numa única tela,
+       sem rolagem, antes do rodapé de apoiadores). No mobile,
+       .stage não aplica altura fixa — o fluxo continua normal.
+       ============================================================ -->
+  <main id="conteudo-principal" class="stage">
 
-    <div class="hero__inner">
-      <div class="hero__top-row">
-        <img class="hero__badge" src="assets/badge-data-evento.png" alt="Evento nos dias 11 e 12 de dezembro de 2024" width="203" height="168">
-        <img class="hero__mark" src="assets/logo-jl-mark.png" alt="" aria-hidden="true" width="132" height="132">
-      </div>
+    <!-- ============ HERO ============ -->
+    <header class="hero">
+      <img class="hero__decor" src="assets/hero-foto-duotone.png" alt="" aria-hidden="true" width="813" height="1350">
 
-      <h1 class="hero__logo">
-        <img src="assets/logo-jornada-literaria.png" alt="Jornada Literária" width="872" height="153">
-      </h1>
-
-      <div class="hero__content">
-        <div class="hero__text">
-          <h2 class="hero__subheading">A produção do livro no mundo digital</h2>
-          <p class="hero__body font-mono">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+      <div class="hero__inner">
+        <div class="hero__top-row">
+          <img class="hero__badge" src="assets/badge-data-evento.png" alt="Evento nos dias 11 e 12 de dezembro de 2024" width="203" height="168">
+          <img class="hero__mark" src="assets/logo-jl-mark.png" alt="" aria-hidden="true" width="132" height="132">
         </div>
 
-        <div class="hero__tablets">
-          <img src="assets/hero-tablets-livros.png" alt="Tablets exibindo as capas dos livros digitais &quot;A Febre&quot;, de Marcelo Ferroni, e &quot;Louças de família&quot;, de Eliane Marques" width="796" height="535">
+        <!-- Logotipo vetorizado (texto real + fonte, sem imagem raster) -->
+        <h1 class="hero__logo">
+          <span class="hero__logo-jornada">Jornada</span><span class="hero__logo-accent"><span class="hero__logo-literaria">LITERÁRIA</span><svg class="hero__logo-sparkle" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <path d="M32 0 L36 26 L64 32 L36 38 L32 64 L28 38 L0 32 L28 26 Z" fill="currentColor"/>
+          </svg></span>
+        </h1>
+
+        <div class="hero__content">
+          <div class="hero__text">
+            <h2 class="hero__subheading">A produção do livro no mundo digital</h2>
+            <p class="hero__body font-mono">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+          </div>
+
+          <div class="hero__tablets">
+            <img src="assets/hero-tablets-livros.png" alt="Tablets exibindo as capas dos livros digitais &quot;A Febre&quot;, de Marcelo Ferroni, e &quot;Louças de família&quot;, de Eliane Marques" width="796" height="535">
+          </div>
         </div>
       </div>
-    </div>
-  </header>
-
-  <main id="conteudo-principal">
+    </header>
 
     <!-- ============ INTRO (gradiente) ============ -->
     <section class="intro" aria-labelledby="intro-heading">
@@ -61,17 +73,61 @@
 
     <!-- ============ PROGRAMAÇÃO (cards dos dias) ============ -->
     <section class="events" aria-label="Programação da Jornada Literária">
+
+      <!-- Dia 11 — agora um slider de fotos (pronto para receber mais
+           imagens; hoje tem 1 foto real, então as setas/bolinhas ficam
+           ocultas até que existam 2+ fotos). -->
       <figure class="events__item events__item--poster">
-        <img src="assets/mockup-poster-dia11.jpg" alt="11 de dezembro — Mercado de livros digitais e autopublicação" width="1600" height="1067">
+        <div class="slider" data-slider role="region" aria-roledescription="carrossel" aria-label="Fotos do dia 11 de dezembro">
+          <ul class="slider__track">
+            <li class="slider__slide">
+              <img src="assets/mockup-poster-dia11.jpg" alt="11 de dezembro — Mercado de livros digitais e autopublicação" width="1600" height="1067">
+            </li>
+          </ul>
+          <button class="slider__arrow slider__arrow--prev" type="button" aria-label="Foto anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="slider__arrow slider__arrow--next" type="button" aria-label="Próxima foto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 L17 12 L9 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="slider__dots" role="tablist" aria-label="Selecionar foto"></div>
+        </div>
       </figure>
+
+      <!-- Dia 12 — mockup + objetos flutuantes animados (GSAP) + player
+           de áudio flutuante -->
       <figure class="events__item events__item--tablet">
+        <div class="events__floaters" aria-hidden="true">
+          <span class="floater floater--1"></span>
+          <span class="floater floater--2"></span>
+          <span class="floater floater--3"></span>
+          <span class="floater floater--4"></span>
+        </div>
+
         <img src="assets/mockup-tablet-dia12.png" alt="12 de dezembro — Audiolivro e Acessibilidade" width="1161" height="1025">
+
+        <!-- Player de áudio flutuante e funcional -->
+        <div class="audio-player" data-audio-player>
+          <audio data-audio-element preload="none" loop>
+            <source src="assets/audio/sample-placeholder.mp3" type="audio/mpeg">
+          </audio>
+          <button class="audio-player__toggle" type="button" data-audio-toggle aria-label="Reproduzir amostra do audiolivro">
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19 Z" fill="currentColor"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M7 5 H10 V19 H7 Z M14 5 H17 V19 H14 Z" fill="currentColor"/></svg>
+          </button>
+          <div class="audio-player__body">
+            <span class="audio-player__label">Ouça uma amostra</span>
+            <div class="audio-player__bars" data-audio-bars aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
       </figure>
     </section>
 
     <!-- ============ #PARTICIPE ============ -->
     <section class="participe" aria-label="Chamada para participação">
-      <div class="participe__hashtags" aria-hidden="true">
+      <div class="participe__hashtags" data-stagger-group aria-hidden="true">
         <span style="--o:.08">#Participe</span>
         <span style="--o:.18">#Participe</span>
         <span style="--o:.32">#Participe</span>
@@ -84,9 +140,8 @@
       <img class="participe__photo" src="assets/foto-mulher-participe.png" alt="Mulher sorridente apontando para a câmera, convidando o público a participar" width="543" height="999">
 
       <div class="participe__zigzag" aria-hidden="true"></div>
-
-      <img class="participe__logo" src="assets/logo-jornada-literaria-mono.png" alt="Jornada Literária" width="462" height="82">
     </section>
+
   </main>
 
   <!-- ============ RODAPÉ / REALIZAÇÃO ============ -->
@@ -100,5 +155,11 @@
     </div>
   </footer>
 
+  <!-- GSAP (via cdnjs) — objetos flutuantes do card "12 dezembro" e o
+       efeito de revelação sequencial do bloco #Participe. Tudo tem
+       fallback: sem GSAP, os objetos ficam parados e o texto aparece
+       normalmente (nunca fica oculto). -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

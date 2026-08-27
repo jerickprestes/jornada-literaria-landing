@@ -1,7 +1,9 @@
 /* ==========================================================================
    Jornada Literária — Landing Page
-   CSS mobile-first. Breakpoint principal em 700px (proporções calibradas
-   pela referência real de desktop em 1440px de largura).
+   CSS mobile-first. No mobile o fluxo rola normalmente. A partir de 700px,
+   Hero + Intro + Programação + #Participe (".stage") passam a ocupar
+   exatamente 100vh somados — ajuste pedido nesta rodada — e o rodapé de
+   apoiadores vem logo em seguida.
    ========================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -28,6 +30,15 @@ img, picture {
   display: block;
 }
 
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
 ::selection {
   background: var(--color-mint);
   color: var(--color-ink);
@@ -51,12 +62,12 @@ img, picture {
   --gradient-brand: linear-gradient(120deg, var(--color-teal) 0%, var(--color-cyan-deep) 55%, var(--color-cyan) 100%);
   --gradient-brand-soft: linear-gradient(100deg, var(--color-teal) 0%, var(--color-cyan) 100%);
 
-  /* Tipografia — Poppins para títulos (aproxima a sans geométrica bold do
-     material original) e Space Mono para o texto corrido (o material usa
-     uma fonte monoespaçada nos parágrafos de apoio). O logotipo serifado
-     itálico "LITERÁRIA" é entregue como imagem (assets/logo-jornada-literaria*),
-     preservando a customização exata da peça original. */
+  /* Tipografia — Poppins para títulos e para o logotipo vetorizado,
+     Playfair Display itálico para o acento "LITERÁRIA" do logotipo, e
+     Space Mono para o texto corrido (referência tipográfica do material
+     original, que usa uma fonte monoespaçada nos parágrafos de apoio). */
   --font-display: 'Poppins', 'Segoe UI', sans-serif;
+  --font-accent:  'Playfair Display', Georgia, serif;
   --font-mono:    'Space Mono', 'Courier New', monospace;
 
   /* Espaçamento fluido */
@@ -111,7 +122,49 @@ button:focus-visible {
 }
 
 /* ---------------------------------------------------------------------
-   4. HERO
+   4. LOGOTIPO VETORIZADO (texto + fonte, sem imagem raster)
+   --------------------------------------------------------------------- */
+.hero__logo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2em;
+  color: var(--color-ink);
+  line-height: 1;
+  margin-bottom: clamp(1.25rem, 4vw, 2rem);
+}
+
+.hero__logo-jornada,
+.hero__logo-literaria {
+  font-size: clamp(2rem, 9vw, 3rem);
+}
+
+.hero__logo-accent {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.15em;
+}
+
+.hero__logo-jornada {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.hero__logo-literaria {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.hero__logo-sparkle {
+  width: 0.45em;
+  height: 0.45em;
+  color: var(--color-mint);
+  flex: none;
+}
+
+/* ---------------------------------------------------------------------
+   5. HERO
    --------------------------------------------------------------------- */
 .hero {
   position: relative;
@@ -120,12 +173,17 @@ button:focus-visible {
   padding-bottom: clamp(2rem, 6vw, 3.5rem);
 }
 
+/* Ajuste pedido: a foto duotone precisa alcançar o fim da seção — usamos
+   height:100% + object-fit:cover para ela sempre preencher a altura
+   inteira do hero, em qualquer breakpoint. */
 .hero__decor {
   position: absolute;
-  top: -4%;
+  top: 0;
   right: 0;
+  height: 100%;
   width: clamp(150px, 45vw, 260px);
-  height: auto;
+  object-fit: cover;
+  object-position: top right;
   z-index: 0;
   pointer-events: none;
   user-select: none;
@@ -154,16 +212,6 @@ button:focus-visible {
 
 .hero__mark {
   width: clamp(56px, 11vw, 78px);
-  height: auto;
-}
-
-.hero__logo {
-  margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
-  max-width: min(92%, 620px);
-}
-
-.hero__logo img {
-  width: 100%;
   height: auto;
 }
 
@@ -197,7 +245,7 @@ button:focus-visible {
 }
 
 /* ---------------------------------------------------------------------
-   5. INTRO (seção com gradiente)
+   6. INTRO (seção com gradiente)
    --------------------------------------------------------------------- */
 .intro {
   position: relative;
@@ -212,6 +260,7 @@ button:focus-visible {
   padding: var(--section-padding-y) var(--gutter);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2rem;
 }
 
@@ -244,24 +293,32 @@ button:focus-visible {
   font-weight: 700;
 }
 
+/* Ajuste pedido: a foto precisa ser maior e ficar ancorada ao rodapé da
+   seção — preenche 100% da altura disponível (object-fit:cover, sem
+   distorcer) e fica sempre encostada embaixo. */
 .intro__photo {
-  width: min(100%, 420px);
-  margin-inline: auto;
+  width: min(100%, 460px);
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: center bottom;
+  align-self: flex-end;
 }
 
 /* ---------------------------------------------------------------------
-   6. PROGRAMAÇÃO (cards dos dias 11 e 12)
+   7. PROGRAMAÇÃO (cards dos dias 11 e 12)
    --------------------------------------------------------------------- */
 .events {
   display: grid;
   grid-template-columns: 1fr;
+  overflow: hidden;
 }
 
 .events__item {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
   overflow: hidden;
 }
 
@@ -283,17 +340,185 @@ button:focus-visible {
 
 .events__item--tablet img {
   object-fit: contain;
-  padding: clamp(1rem, 4vw, 2rem);
+  padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 4vw, 2rem) clamp(3.5rem, 9vw, 4.5rem);
+}
+
+/* --- Slider de fotos (dia 11) ------------------------------------- */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slider__track {
+  display: flex;
+  height: 100%;
+  list-style: none;
+  transition: transform 0.45s cubic-bezier(.65,0,.35,1);
+}
+
+.slider__slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.slider__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(1.8rem, 4vw, 2.25rem);
+  height: clamp(1.8rem, 4vw, 2.25rem);
+  border-radius: 50%;
+  background: rgba(255,255,255,.88);
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,.22);
+  transition: transform .2s ease, background .2s ease;
+  z-index: 2;
+}
+.slider__arrow svg { width: 45%; height: 45%; }
+.slider__arrow--prev { left: .6rem; }
+.slider__arrow--next { right: .6rem; }
+.slider__arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+.slider__arrow:disabled { opacity: .35; cursor: default; }
+.slider__arrow[hidden] { display: none; }
+
+.slider__dots {
+  position: absolute;
+  bottom: .6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: .4rem;
+  z-index: 2;
+}
+.slider__dots[hidden] { display: none; }
+.slider__dots button {
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,.55);
+}
+.slider__dots button.is-active { background: #fff; }
+
+/* --- Objetos flutuantes (GSAP, com fallback em CSS puro) ----------- */
+.events__floaters {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floater {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  animation: floatY 4.5s ease-in-out infinite;
+}
+.floater--1 { width: 14px; height: 14px; top: 14%; left: 18%; animation-duration: 4.2s; }
+.floater--2 { width: 24px; height: 24px; top: 68%; left: 82%; background: rgba(255,255,255,.22); animation-duration: 5.6s; animation-delay: .3s; }
+.floater--3 { width: 10px; height: 10px; top: 42%; left: 90%; animation-duration: 3.4s; animation-delay: .9s; }
+.floater--4 { width: 17px; height: 17px; top: 82%; left: 12%; background: rgba(3,215,192,.45); animation-duration: 5s; animation-delay: .15s; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+/* --- Player de áudio flutuante -------------------------------------- */
+.audio-player {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: .4rem .9rem .4rem .4rem;
+  box-shadow: 0 8px 22px rgba(0,0,0,.2);
+  max-width: 90%;
+}
+
+.audio-player__toggle {
+  flex: none;
+  width: clamp(1.9rem, 4vw, 2.3rem);
+  height: clamp(1.9rem, 4vw, 2.3rem);
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s ease;
+}
+.audio-player__toggle:hover { transform: scale(1.06); }
+.audio-player__toggle svg { width: 42%; height: 42%; }
+
+.audio-player__body {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  min-width: 0;
+}
+
+.audio-player__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(.65rem, 1.6vw, .75rem);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.audio-player__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.audio-player__bars span {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-mint);
+  height: 4px;
+}
+.audio-player[data-playing] .audio-player__bars span {
+  animation: audioBar .9s ease-in-out infinite;
+}
+.audio-player__bars span:nth-child(1) { animation-delay: 0s !important; }
+.audio-player__bars span:nth-child(2) { animation-delay: .12s !important; }
+.audio-player__bars span:nth-child(3) { animation-delay: .24s !important; }
+.audio-player__bars span:nth-child(4) { animation-delay: .36s !important; }
+.audio-player__bars span:nth-child(5) { animation-delay: .48s !important; }
+
+@keyframes audioBar {
+  0%, 100% { height: 4px; }
+  50% { height: 12px; }
 }
 
 /* ---------------------------------------------------------------------
-   7. #PARTICIPE
+   8. #PARTICIPE
    --------------------------------------------------------------------- */
 .participe {
   position: relative;
   background: var(--color-paper);
   padding-top: var(--section-padding-y);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .participe__hashtags {
@@ -302,6 +527,7 @@ button:focus-visible {
   padding-inline: var(--gutter);
   max-width: var(--content-max);
   margin-inline: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   line-height: 1.05;
@@ -327,11 +553,16 @@ button:focus-visible {
   margin: 1.5rem auto 0;
 }
 
+/* Ajuste pedido: o zigue-zague precisa ir até o final do rodapé — em
+   vez de altura fixa com respiro embaixo, ele cresce (flex:1) até
+   encostar exatamente na borda inferior da seção, que é seguida pelo
+   rodapé de apoiadores. */
 .participe__zigzag {
   position: relative;
   z-index: 0;
+  flex: 1;
+  min-height: clamp(120px, 24vw, 220px);
   margin-top: -2.5rem;
-  height: clamp(160px, 32vw, 260px);
   background: var(--gradient-brand-soft);
   clip-path: polygon(
     0% 38%, 30% 8%, 30% 8%, 19% 46%,
@@ -341,16 +572,8 @@ button:focus-visible {
   );
 }
 
-.participe__logo {
-  position: relative;
-  z-index: 1;
-  width: clamp(150px, 32vw, 230px);
-  margin: 1.5rem 0 0;
-  margin-inline: var(--gutter);
-}
-
 /* ---------------------------------------------------------------------
-   8. RODAPÉ / APOIO
+   9. RODAPÉ / APOIO
    --------------------------------------------------------------------- */
 .sponsors {
   background: var(--gradient-brand-soft);
@@ -375,12 +598,10 @@ button:focus-visible {
 }
 
 /* =========================================================================
-   9. BREAKPOINT — TABLET / DESKTOP (>= 700px)
-   Proporções calibradas a partir da peça real de 1440px de largura:
-   gutter lateral ~4% (58px @1440), colunas do hero 46%/41%, cards do
-   evento em split exato de 50/50, coluna de texto do #Participe ~60%.
-   Os clamp() abaixo miram o valor real em 1440px e ficam estáveis (não
-   crescem mais) em telas maiores.
+   10. BREAKPOINT — TABLET / DESKTOP (>= 700px)
+   Proporções calibradas a partir da peça real de 1440px de largura, e o
+   ".stage" (Hero+Intro+Programação+#Participe) comprimido para caber em
+   100vh, conforme o ajuste pedido.
    ========================================================================= */
 @media (min-width: 700px) {
 
@@ -389,89 +610,138 @@ button:focus-visible {
     --gutter: clamp(1.5rem, 4vw, 4.2rem);
   }
 
-  .hero__decor {
-    width: clamp(220px, 30vw, 340px);
-    top: -6%;
+  /* --- Palco de 100vh --------------------------------------------- */
+  .stage {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 640px;
+    display: grid;
+    grid-template-rows: minmax(0, 30fr) minmax(0, 20fr) minmax(0, 27fr) minmax(0, 23fr);
+    overflow: hidden;
   }
+
+  .stage > .hero,
+  .stage > .intro,
+  .stage > .events,
+  .stage > .participe {
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* --- Hero (compacto) --------------------------------------------- */
+  .hero {
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero__inner {
+    width: 100%;
+    padding-block: 0;
+  }
+
+  .hero__top-row { margin-bottom: clamp(.2rem, .9vw, .35rem); }
+
+  .hero__badge { width: clamp(52px, 5.6vw, min(72px, 9vh)); }
+  .hero__mark { width: clamp(32px, 3.4vw, min(44px, 5.5vh)); }
+
+  .hero__logo { margin-bottom: clamp(.3rem, 1vw, .45rem); }
+  .hero__logo-jornada,
+  .hero__logo-literaria { font-size: clamp(1.4rem, 2.6vw, min(2.1rem, 4vh)); }
+
+  .hero__decor { width: clamp(200px, 26vw, 320px); }
 
   .hero__content {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: clamp(2rem, 5vw, 4rem);
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 
   .hero__text { flex: 1 1 46%; }
 
   .hero__tablets {
-    flex: 1 1 41%;
+    flex: 1 1 38%;
     width: 100%;
-    max-width: 420px;
+    max-width: min(210px, 24vh);
     margin-inline: 0;
   }
 
-  /* Wordmark ocupa quase toda a largura útil do container (~92% no
-     original, praticamente 100% da área interna após o gutter). */
-  .hero__logo {
-    max-width: none;
-  }
+  .hero__logo { max-width: none; }
 
   .hero__subheading {
-    font-size: clamp(1.4rem, 1.7vw, 1.6rem);
+    font-size: clamp(1.1rem, 1.5vw, min(1.4rem, 2.6vh));
     max-width: none;
+    margin-bottom: .4em;
   }
 
   .hero__body {
-    font-size: clamp(0.8rem, 0.95vw, 0.9rem);
+    font-size: clamp(.72rem, .85vw, .82rem);
+    line-height: 1.5;
   }
 
+  /* --- Intro (compacto) --------------------------------------------- */
   .intro__inner {
     flex-direction: row;
-    align-items: center;
-    padding-block: clamp(3rem, 8vw, 5.5rem);
+    align-items: stretch;
+    height: 100%;
+    padding-block: clamp(1rem, 2.5vw, 1.75rem);
   }
 
-  .intro__text { flex: 1 1 55%; }
+  .intro__text {
+    flex: 1 1 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
   .intro__heading {
-    font-size: clamp(1.9rem, 2.5vw, 2.3rem);
+    font-size: clamp(1.3rem, 2vw, 1.9rem);
     max-width: none;
+    margin-bottom: .3em;
   }
 
-  /* Vão vertical grande entre o título e o parágrafo — presente na peça
-     original (título encostado no topo da seção, texto bem mais abaixo,
-     ao lado da foto que ocupa a altura inteira da seção). */
-  .intro__text p:first-of-type {
-    margin-top: clamp(1.5rem, 16vw, 14.4rem);
-  }
+  .intro__text p { font-size: clamp(.68rem, .8vw, .8rem); }
+  .intro__text p:first-of-type { margin-top: 0; }
+  .intro__text p + p { margin-top: .4em; }
 
   .intro__photo {
-    flex: 1 1 45%;
-    width: min(100%, 480px);
-    margin-inline: 0;
-    margin-right: calc(var(--gutter) * -1.4);
+    flex: 1 1 42%;
+    width: min(100%, 380px);
+    min-height: 0;
+    margin-right: calc(var(--gutter) * -1.2);
   }
 
-  .events {
-    grid-template-columns: 1fr 1fr;
-  }
+  /* --- Programação (compacto) --------------------------------------- */
+  .events { grid-template-columns: 1fr 1fr; }
 
-  /* Split exato 50/50 confirmado pixel a pixel na peça original; a
-     proporção altura/largura de cada coluna é praticamente quadrada. */
   .events__item--poster,
   .events__item--tablet {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: auto;
   }
 
-  /* Coluna de texto ~60% / foto ~40%. A foto ocupa a altura cheia da
-     seção (com object-fit:cover, sem distorcer); a coluna de texto flui
-     normalmente a partir do topo — não fica ancorada embaixo. */
+  .events__item--tablet img {
+    padding: clamp(.5rem, 1.6vw, 1rem) clamp(.5rem, 1.6vw, 1rem) clamp(2rem, 5vw, 2.75rem);
+  }
+
+  .audio-player { bottom: 4%; }
+
+  /* --- #Participe (compacto) ----------------------------------------- */
   .participe {
     display: grid;
     grid-template-columns: 3fr 2fr;
-    grid-template-rows: auto auto auto;
-    min-height: clamp(480px, 45vw, 760px);
+    grid-template-rows: auto minmax(0, 1fr);
     padding-inline: 0;
+    padding-top: clamp(.75rem, 2vw, 1.25rem);
+  }
+
+  /* Em telas largas, 6 linhas inteiras de "#Participe" não cabem com
+     bom tamanho dentro do espaço comprimido — mantemos as 3 mais
+     visíveis (o efeito de esmaecer continua legível). */
+  .participe__hashtags span:nth-child(1),
+  .participe__hashtags span:nth-child(2),
+  .participe__hashtags span:nth-child(3) {
+    display: none;
   }
 
   .participe__hashtags {
@@ -480,7 +750,7 @@ button:focus-visible {
   }
 
   .participe__hashtags span {
-    font-size: clamp(2.4rem, 4.4vw, 4.4rem);
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
   }
 
   .participe__photo {
@@ -488,7 +758,7 @@ button:focus-visible {
     grid-row: 1 / -1;
     width: 100%;
     height: 100%;
-    max-width: 560px;
+    max-width: 480px;
     object-fit: cover;
     align-self: stretch;
     margin: 0 0 0 auto;
@@ -497,15 +767,9 @@ button:focus-visible {
   .participe__zigzag {
     grid-column: 1;
     grid-row: 2;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     width: 90%;
-  }
-
-  .participe__logo {
-    grid-column: 1;
-    grid-row: 3;
-    width: clamp(180px, 16vw, 260px);
-    margin-inline: 0;
+    min-height: 0;
   }
 
   .sponsors__row {
