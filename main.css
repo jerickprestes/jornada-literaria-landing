@@ -1,9 +1,9 @@
 /* ==========================================================================
    Jornada Literária — Landing Page
    CSS mobile-first. No mobile o fluxo rola normalmente. A partir de 700px,
-   Hero + Intro + Programação + #Participe (".stage") passam a ocupar
-   exatamente 100vh somados — ajuste pedido nesta rodada — e o rodapé de
-   apoiadores vem logo em seguida.
+   Hero, Intro, Programação e #Participe passam a ter, cada uma, no mínimo
+   100vh de altura própria (uma seção por tela) — o rodapé de apoiadores
+   vem em seguida, fora dessa regra.
    ========================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -599,9 +599,10 @@ button:focus-visible {
 
 /* =========================================================================
    10. BREAKPOINT — TABLET / DESKTOP (>= 700px)
-   Proporções calibradas a partir da peça real de 1440px de largura, e o
-   ".stage" (Hero+Intro+Programação+#Participe) comprimido para caber em
-   100vh, conforme o ajuste pedido.
+   Proporções calibradas a partir da peça real de 1440px de largura.
+   Hero, Intro, Programação e #Participe têm, cada uma, no mínimo 100vh
+   (min-height, não height fixo — se o conteúdo precisar de mais espaço
+   em alguma tela muito baixa, a seção cresce em vez de cortar nada).
    ========================================================================= */
 @media (min-width: 700px) {
 
@@ -610,82 +611,62 @@ button:focus-visible {
     --gutter: clamp(1.5rem, 4vw, 4.2rem);
   }
 
-  /* --- Palco de 100vh --------------------------------------------- */
-  .stage {
-    height: 100vh;
-    height: 100dvh;
-    min-height: 640px;
-    display: grid;
-    grid-template-rows: minmax(0, 30fr) minmax(0, 20fr) minmax(0, 27fr) minmax(0, 23fr);
-    overflow: hidden;
-  }
-
-  .stage > .hero,
-  .stage > .intro,
-  .stage > .events,
-  .stage > .participe {
-    height: 100%;
-    min-height: 0;
-  }
-
-  /* --- Hero (compacto) --------------------------------------------- */
+  /* --- Hero: 100vh, conteúdo centralizado verticalmente ------------- */
   .hero {
-    padding-bottom: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-block: clamp(2rem, 6vw, 3.5rem);
     display: flex;
     align-items: center;
   }
 
-  .hero__inner {
-    width: 100%;
-    padding-block: 0;
-  }
+  .hero__inner { width: 100%; }
 
-  .hero__top-row { margin-bottom: clamp(.2rem, .9vw, .35rem); }
-
-  .hero__badge { width: clamp(52px, 5.6vw, min(72px, 9vh)); }
-  .hero__mark { width: clamp(32px, 3.4vw, min(44px, 5.5vh)); }
-
-  .hero__logo { margin-bottom: clamp(.3rem, 1vw, .45rem); }
+  .hero__logo { max-width: none; }
   .hero__logo-jornada,
-  .hero__logo-literaria { font-size: clamp(1.4rem, 2.6vw, min(2.1rem, 4vh)); }
+  .hero__logo-literaria { font-size: clamp(2.2rem, 4.4vw, 3.6rem); }
 
-  .hero__decor { width: clamp(200px, 26vw, 320px); }
+  .hero__decor { width: clamp(220px, 30vw, 340px); }
 
   .hero__content {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: clamp(1.5rem, 4vw, 3rem);
+    gap: clamp(2rem, 5vw, 4rem);
   }
 
   .hero__text { flex: 1 1 46%; }
 
   .hero__tablets {
-    flex: 1 1 38%;
+    flex: 1 1 41%;
     width: 100%;
-    max-width: min(210px, 24vh);
+    max-width: 420px;
     margin-inline: 0;
   }
 
-  .hero__logo { max-width: none; }
-
   .hero__subheading {
-    font-size: clamp(1.1rem, 1.5vw, min(1.4rem, 2.6vh));
+    font-size: clamp(1.6rem, 2vw, 2rem);
     max-width: none;
-    margin-bottom: .4em;
   }
 
   .hero__body {
-    font-size: clamp(.72rem, .85vw, .82rem);
-    line-height: 1.5;
+    font-size: clamp(.9rem, 1vw, 1rem);
   }
 
-  /* --- Intro (compacto) --------------------------------------------- */
+  /* --- Intro: 100vh, foto ocupa a altura cheia, ancorada embaixo ----- */
+  .intro {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
   .intro__inner {
+    flex: 1;
     flex-direction: row;
     align-items: stretch;
     height: 100%;
-    padding-block: clamp(1rem, 2.5vw, 1.75rem);
+    padding-block: clamp(3rem, 8vw, 5.5rem);
   }
 
   .intro__text {
@@ -696,61 +677,72 @@ button:focus-visible {
   }
 
   .intro__heading {
-    font-size: clamp(1.3rem, 2vw, 1.9rem);
+    font-size: clamp(2rem, 3vw, 2.75rem);
     max-width: none;
-    margin-bottom: .3em;
   }
 
-  .intro__text p { font-size: clamp(.68rem, .8vw, .8rem); }
-  .intro__text p:first-of-type { margin-top: 0; }
-  .intro__text p + p { margin-top: .4em; }
+  /* Vão vertical grande entre o título e o parágrafo — presente na peça
+     original (título encostado no topo, texto bem mais abaixo, ao lado
+     da foto que ocupa a altura inteira da seção). */
+  .intro__text p:first-of-type {
+    margin-top: clamp(2rem, 16vw, 14.4rem);
+  }
 
+  /* A foto "vaza" o padding vertical do container (margem negativa igual
+     ao padding-block acima) para realmente encostar no topo e no rodapé
+     da seção, e não só ficar no fundo da área com respiro do texto. */
   .intro__photo {
-    flex: 1 1 42%;
-    width: min(100%, 380px);
+    flex: 1 1 45%;
+    width: min(100%, 500px);
     min-height: 0;
-    margin-right: calc(var(--gutter) * -1.2);
+    margin-block: clamp(-5.5rem, -8vw, -3rem);
+    margin-right: calc(var(--gutter) * -1.4);
   }
 
-  /* --- Programação (compacto) --------------------------------------- */
-  .events { grid-template-columns: 1fr 1fr; }
-
-  .events__item--poster,
-  .events__item--tablet {
-    aspect-ratio: auto;
+  /* --- Programação: 100vh, os dois cards preenchem a altura cheia --- */
+  .events {
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .events__item--tablet img {
-    padding: clamp(.5rem, 1.6vw, 1rem) clamp(.5rem, 1.6vw, 1rem) clamp(2rem, 5vw, 2.75rem);
+    padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem) clamp(3rem, 7vw, 4.5rem);
   }
 
-  .audio-player { bottom: 4%; }
-
-  /* --- #Participe (compacto) ----------------------------------------- */
+  /* --- #Participe: 100vh, coluna de texto centralizada, foto na altura
+     cheia ancorada à direita ------------------------------------------
+     Linhas 1 e 4 são vazias e flexíveis (1fr cada): absorvem o espaço
+     sobrando acima/abaixo e centralizam o grupo hashtags+zigzag como
+     unidade, sem precisar agrupá-los num wrapper (o que preserva a
+     ordem original no mobile: hashtags, foto, zigzag). */
   .participe {
     display: grid;
     grid-template-columns: 3fr 2fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    padding-inline: 0;
-    padding-top: clamp(.75rem, 2vw, 1.25rem);
-  }
-
-  /* Em telas largas, 6 linhas inteiras de "#Participe" não cabem com
-     bom tamanho dentro do espaço comprimido — mantemos as 3 mais
-     visíveis (o efeito de esmaecer continua legível). */
-  .participe__hashtags span:nth-child(1),
-  .participe__hashtags span:nth-child(2),
-  .participe__hashtags span:nth-child(3) {
-    display: none;
+    grid-template-rows: minmax(2rem, 1fr) auto auto minmax(2rem, 1fr);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 0;
   }
 
   .participe__hashtags {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
+    padding-inline: var(--gutter);
   }
 
   .participe__hashtags span {
-    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    font-size: clamp(2.6rem, 4.2vw, 4.5rem);
+  }
+
+  .participe__zigzag {
+    grid-column: 1;
+    grid-row: 3;
+    flex: none;
+    height: clamp(180px, 20vw, 280px);
+    min-height: 0;
+    width: 90%;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
   }
 
   .participe__photo {
@@ -758,18 +750,9 @@ button:focus-visible {
     grid-row: 1 / -1;
     width: 100%;
     height: 100%;
-    max-width: 480px;
+    max-width: 600px;
     object-fit: cover;
-    align-self: stretch;
     margin: 0 0 0 auto;
-  }
-
-  .participe__zigzag {
-    grid-column: 1;
-    grid-row: 2;
-    margin-top: 1rem;
-    width: 90%;
-    min-height: 0;
   }
 
   .sponsors__row {
