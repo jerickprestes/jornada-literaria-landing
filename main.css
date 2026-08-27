@@ -1,7 +1,7 @@
 /* ==========================================================================
    Jornada Literária — Landing Page
-   CSS mobile-first. Breakpoints: base (mobile) -> 700px (tablet/desktop)
-                                                 -> 1200px (telas grandes)
+   CSS mobile-first. Breakpoint principal em 700px (proporções calibradas
+   pela referência real de desktop em 1440px de largura).
    ========================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -24,6 +24,7 @@ body {
 
 img, picture {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -62,8 +63,10 @@ img, picture {
   --gutter: clamp(1.25rem, 5vw, 3rem);
   --section-padding-y: clamp(2.5rem, 7vw, 5rem);
 
-  /* Largura de conteúdo */
-  --content-max: 1180px;
+  /* Largura de conteúdo — a peça original usa um canvas de 1440px com
+     margens laterais de ~4%; reproduzimos isso e damos um teto um pouco
+     maior para não ficar apertado em monitores grandes. */
+  --content-max: 1600px;
 }
 
 /* ---------------------------------------------------------------------
@@ -346,10 +349,6 @@ button:focus-visible {
   margin-inline: var(--gutter);
 }
 
-@media (min-width: 700px) {
-  .participe__logo { margin-inline: auto; max-width: var(--content-max); padding-inline: var(--gutter); width: 230px; }
-}
-
 /* ---------------------------------------------------------------------
    8. RODAPÉ / APOIO
    --------------------------------------------------------------------- */
@@ -377,9 +376,18 @@ button:focus-visible {
 
 /* =========================================================================
    9. BREAKPOINT — TABLET / DESKTOP (>= 700px)
-   Composição baseada na versão "Desktop" fornecida.
+   Proporções calibradas a partir da peça real de 1440px de largura:
+   gutter lateral ~4% (58px @1440), colunas do hero 46%/41%, cards do
+   evento em split exato de 50/50, coluna de texto do #Participe ~60%.
+   Os clamp() abaixo miram o valor real em 1440px e ficam estáveis (não
+   crescem mais) em telas maiores.
    ========================================================================= */
 @media (min-width: 700px) {
+
+  :root {
+    /* gutter lateral: ~58px em 1440px de viewport (4% arredondado) */
+    --gutter: clamp(1.5rem, 4vw, 4.2rem);
+  }
 
   .hero__decor {
     width: clamp(220px, 30vw, 340px);
@@ -393,13 +401,28 @@ button:focus-visible {
     gap: clamp(2rem, 5vw, 4rem);
   }
 
-  .hero__text { flex: 1 1 50%; }
+  .hero__text { flex: 1 1 46%; }
 
   .hero__tablets {
-    flex: 1 1 42%;
+    flex: 1 1 41%;
     width: 100%;
     max-width: 420px;
     margin-inline: 0;
+  }
+
+  /* Wordmark ocupa quase toda a largura útil do container (~92% no
+     original, praticamente 100% da área interna após o gutter). */
+  .hero__logo {
+    max-width: none;
+  }
+
+  .hero__subheading {
+    font-size: clamp(1.4rem, 1.7vw, 1.6rem);
+    max-width: none;
+  }
+
+  .hero__body {
+    font-size: clamp(0.8rem, 0.95vw, 0.9rem);
   }
 
   .intro__inner {
@@ -409,6 +432,18 @@ button:focus-visible {
   }
 
   .intro__text { flex: 1 1 55%; }
+
+  .intro__heading {
+    font-size: clamp(1.9rem, 2.5vw, 2.3rem);
+    max-width: none;
+  }
+
+  /* Vão vertical grande entre o título e o parágrafo — presente na peça
+     original (título encostado no topo da seção, texto bem mais abaixo,
+     ao lado da foto que ocupa a altura inteira da seção). */
+  .intro__text p:first-of-type {
+    margin-top: clamp(1.5rem, 16vw, 14.4rem);
+  }
 
   .intro__photo {
     flex: 1 1 45%;
@@ -421,35 +456,47 @@ button:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 
+  /* Split exato 50/50 confirmado pixel a pixel na peça original; a
+     proporção altura/largura de cada coluna é praticamente quadrada. */
   .events__item--poster,
   .events__item--tablet {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
   }
 
+  /* Coluna de texto ~60% / foto ~40%. A foto ocupa a altura cheia da
+     seção (com object-fit:cover, sem distorcer); a coluna de texto flui
+     normalmente a partir do topo — não fica ancorada embaixo. */
   .participe {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: end;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto auto auto;
+    min-height: clamp(480px, 45vw, 760px);
     padding-inline: 0;
   }
 
   .participe__hashtags {
     grid-column: 1;
-    grid-row: 1 / 3;
+    grid-row: 1;
+  }
+
+  .participe__hashtags span {
+    font-size: clamp(2.4rem, 4.4vw, 4.4rem);
   }
 
   .participe__photo {
     grid-column: 2;
-    grid-row: 1 / 3;
-    width: min(100%, 420px);
+    grid-row: 1 / -1;
+    width: 100%;
+    height: 100%;
+    max-width: 560px;
+    object-fit: cover;
+    align-self: stretch;
     margin: 0 0 0 auto;
-    align-self: end;
   }
 
   .participe__zigzag {
     grid-column: 1;
     grid-row: 2;
-    align-self: end;
     margin-top: 1.5rem;
     width: 90%;
   }
@@ -457,19 +504,11 @@ button:focus-visible {
   .participe__logo {
     grid-column: 1;
     grid-row: 3;
+    width: clamp(180px, 16vw, 260px);
+    margin-inline: 0;
   }
 
   .sponsors__row {
     grid-template-columns: repeat(4, 1fr);
   }
-}
-
-/* =========================================================================
-   10. TELAS GRANDES (>= 1200px)
-   Mantém as proporções da composição desktop, com respiro extra nas laterais.
-   ========================================================================= */
-@media (min-width: 1200px) {
-  .hero__subheading { font-size: 2.35rem; }
-  .intro__heading { font-size: 3rem; }
-  .participe__hashtags span { font-size: 4.25rem; }
 }
